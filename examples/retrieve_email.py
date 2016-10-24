@@ -30,7 +30,7 @@ def inbox_parameters(auth):
 
 
 if __name__ == '__main__':
-    authorization = ('swimlaneQA@swimlaneqa.onmicrosoft.com', 'pry3#ant')
+    authorization = ('dev@org.onmicrosoft.com', 'password')
     simplest(authorization)
     simple_by_folder(authorization)
     inbox_parameters(authorization)
