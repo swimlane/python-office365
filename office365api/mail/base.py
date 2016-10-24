@@ -1,5 +1,5 @@
 from typing import List
-from office365api import requests_validated as requests
+from office365api.connection import Connection
 from office365api.model.attachment import Attachment
 from office365api.model.message import Message
 
@@ -9,12 +9,13 @@ class Base(object):
     BASE_URL = 'https://outlook.office365.com/api/v1.0/me/'
     MAILBOX_URL = BASE_URL+'folders/{folder_id}/messages'
     ATTR_URL = BASE_URL+'folders/{folder_id}/messages/{id}/attachments'
-    # send_url = 'https://outlook.office365.com/api/v1.0/me/sendmail'
+    send_url = BASE_URL+'sendmail'
     # draft_url = 'https://outlook.office365.com/api/v1.0/me/folders/{folder_id}/messages'
     # update_url = 'https://outlook.office365.com/api/v1.0/me/messages/{0}'
 
     def __init__(self, auth):
         self.auth = auth
+        self.connection = Connection(auth)
 
     def get_messages_from_folder(self,
                                  folder: str,
@@ -61,7 +62,7 @@ class Base(object):
         add('$filter', filters)
         add('$orderby', order_by)
 
-        response = requests.get(url=url, auth=self.auth, params=params)
+        response = self.connection.get(url=url, params=params)
         data = response.json()
         return [Message.from_dict(value) for value in data.get('value')] if data else []
 
@@ -72,37 +73,17 @@ class Base(object):
         """
         if not message.HasAttachments:
             return []
-        response = requests.get(url=self.ATTR_URL.format(id=message.Id, folder_id=folder),
-                                auth=self.auth)
+        response = self.connection.get(url=self.ATTR_URL.format(id=message.Id, folder_id=folder))
         data = response.json()
         message.Attachments = [Attachment.factory(a) for a in data.get('value', [])] \
             if data else []
         return message.Attachments
 
-        #     def send(self):
-        #         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        #
-        #         try:
-        #             data = {'Message': {'Body': {}}}
-        #             data['Message']['Subject'] = self.json['Subject']
-        #             data['Message']['Body']['Content'] = self.json['Body']['Content']
-        #             data['Message']['Body']['ContentType'] = self.json['Body']['ContentType']
-        #             data['Message']['ToRecipients'] = self.json['ToRecipients']
-        #             data['Message']['Attachments'] = [att.json for att in self.attachments]
-        #             data['SaveToSentItems'] = "false"
-        #             data = json.dumps(data)
-        #             log.debug(str(data))
-        #         except Exception as e:
-        #             log.error(str(e))
-        #             return False
-        #
-        #         response = requests.post(self.send_url, data, headers=headers, auth=self.auth)
-        #         log.debug('response from server for sending message:' + str(response))
-        #
-        #         if response.status_code != 202:
-        #             return False
-        #
-        #         return True
+    def send_message(self, message: Message):
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        data = message.data
+        self.connection.post(self.send_url, json=data, headers=headers)
+
         #
         #     def markAsRead(self):
         #         '''marks analogous message as read in the cloud.'''
