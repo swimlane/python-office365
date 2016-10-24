@@ -4,9 +4,6 @@ from office365api.model import Message
 
 class Inbox(Folder):
 
-    REPLY_URL = super().BASE_URL+'messages/{id}/reply'
-    REPLY_ALL_URL = super().BASE_URL+'messages/{id}/replyall'
-
     @property
     def folder_name(self):
         return 'Inbox'

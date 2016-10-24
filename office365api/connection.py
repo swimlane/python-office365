@@ -23,3 +23,8 @@ class Connection(object):
         response = requests.post(url, data, json, **kwargs, auth=self.auth)
         self.validate_response(response)
         return response
+
+    def delete(self, url, **kwargs):
+        response = requests.delete(url, **kwargs, auth=self.auth)
+        self.validate_response(response)
+        return response

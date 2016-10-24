@@ -9,8 +9,10 @@ class Base(object):
     BASE_URL = 'https://outlook.office365.com/api/v1.0/me/'
     MAILBOX_URL = BASE_URL+'folders/{folder_id}/messages'
     ATTR_URL = BASE_URL+'folders/{folder_id}/messages/{id}/attachments'
-    send_url = BASE_URL+'sendmail'
-    # draft_url = 'https://outlook.office365.com/api/v1.0/me/folders/{folder_id}/messages'
+    MESSAGE_URL = BASE_URL + 'messages/{id}'
+    SEND_URL = BASE_URL + 'sendmail'
+    REPLY_URL = BASE_URL+'messages/{id}/reply'
+    REPLY_ALL_URL = BASE_URL+'messages/{id}/replyall'
     # update_url = 'https://outlook.office365.com/api/v1.0/me/messages/{0}'
 
     def __init__(self, auth):
@@ -69,7 +71,9 @@ class Base(object):
     def get_attachments(self, folder: str, message: Message)->List[Attachment]:
         """
         Lazy loaded Attachments.
-        :return:
+        :param message: Message object.
+        :param folder: Folder where to perform attachment retrieval.
+        :return: Attachment collection. It is also added to message as side effect.
         """
         if not message.HasAttachments:
             return []
@@ -82,7 +86,17 @@ class Base(object):
     def send_message(self, message: Message):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data = message.data
-        self.connection.post(self.send_url, json=data, headers=headers)
+        self.connection.post(self.SEND_URL, json=data, headers=headers)
+
+    def delete_message(self, message: Message):
+        """
+        Deletes message from the server.
+        :param message: Message object.
+        :return: None
+        """
+        url = self.MESSAGE_URL.format(id=message.Id)
+        self.connection.delete(url=url)
+
 
         #
         #     def markAsRead(self):
@@ -94,121 +108,3 @@ class Base(object):
         #         except:
         #             return False
         #         return True
-        #
-        #     def getSender(self):
-        #         '''get all available information for the sender of the email.'''
-        #         return self.json['Sender']
-        #
-        #     def getSenderEmail(self):
-        #         '''get the email address of the sender.'''
-        #         return self.json['Sender']['EmailAddress']['Address']
-        #
-        #     def getSenderName(self):
-        #         '''try to get the name of the sender.'''
-        #         try:
-        #             return self.json['Sender']['EmailAddress']['Name']
-        #         except:
-        #             return ''
-        #
-        #     def getSubject(self):
-        #         '''get email subject line.'''
-        #         return self.json['Subject']
-        #
-        #     def getBody(self):
-        #         '''get email body.'''
-        #         return self.json['Body']['Content']
-        #
-        #     def setRecipients(self, val):
-        #         '''
-        #         set the recipient list.
-        #
-        #         val: the one argument this method takes can be very flexible. you can send:
-        #             a dictionary: this must to be a dictionary formated as such:
-        #                 {"EmailAddress":{"Address":"recipient@example.com"}}
-        #                 with other options such ass "Name" with address. but at minimum
-        #                 it must have this.
-        #             a list: this must to be a list of libraries formatted the way
-        #                 specified above, or it can be a list of dictionary objects of
-        #                 type Contact or it can be an email address as string. The
-        #                 method will sort out the libraries from the contacts.
-        #             a string: this is if you just want to throw an email address.
-        #             a contact: type Contact from this dictionary.
-        #             a group: type Group, which is a list of contacts.
-        #         For each of these argument types the appropriate action will be taken
-        #         to fit them to the needs of the library.
-        #         '''
-        #         self.json['ToRecipients'] = []
-        #         if isinstance(val, list):
-        #             for con in val:
-        #                 if isinstance(con, Contact):
-        #                     self.addRecipient(con)
-        #                 elif isinstance(con, str):
-        #                     if '@' in con:
-        #                         self.addRecipient(con)
-        #                 elif isinstance(con, dict):
-        #                     self.json['ToRecipients'].append(con)
-        #         elif isinstance(val, dict):
-        #             self.json['ToRecipients'] = [val]
-        #         elif isinstance(val, str):
-        #             if '@' in val:
-        #                 self.addRecipient(val)
-        #         elif isinstance(val, Contact):
-        #             self.addRecipient(val)
-        #         elif isinstance(val, Group):
-        #             for person in val:
-        #                 self.addRecipient(person)
-        #         else:
-        #             return False
-        #         return True
-        #
-        #     def addRecipient(self, address, name=None):
-        #         '''
-        #         Adds a recipient to the recipients list.
-        #
-        #         Arguments:
-        #         address -- the email address of the person you are sending to. <<< Important that.
-        #             Address can also be of type Contact or type Group.
-        #         name -- the name of the person you are sending to. mostly just a decorator. If you
-        #             send an email address for the address arg, this will give you the ability
-        #             to set the name properly, other wise it uses the email address up to the
-        #             at sign for the name. But if you send a type Contact or type Group, this
-        #             argument is completely ignored.
-        #         '''
-        #         if isinstance(address, Contact):
-        #             self.json['ToRecipients'].append(address.getFirstEmailAddress())
-        #         elif isinstance(address, Group):
-        #             for con in address.contacts:
-        #                 self.json['ToRecipients'].append(address.getFirstEmailAddress())
-        #         else:
-        #             if name is None:
-        #                 name = address[:address.index('@')]
-        #             self.json['ToRecipients'].append({'EmailAddress': {'Address': address, 'Name': name}})
-        #
-        #     def setSubject(self, val):
-        #         '''Sets the subect line of the email.'''
-        #         self.json['Subject'] = val
-        #
-        #     def setBody(self, val):
-        #         '''Sets the body content of the email.'''
-        #         cont = False
-        #
-        #         while not cont:
-        #             try:
-        #                 self.json['Body']['Content'] = val
-        #                 self.json['Body']['ContentType'] = 'Text'
-        #                 cont = True
-        #             except:
-        #                 self.json['Body'] = {}
-        #
-        #     def setBodyHTML(self, val=None):
-        #         '''
-        #         Sets the body content type to HTML for your pretty emails.
-        #
-        #         arguments:
-        #         val -- Default: None. The content of the body you want set. If you don't pass a
-        #             value it is just ignored.
-        #         '''
-        #         self.json['Body']['ContentType'] = 'HTML'
-        #         if val:
-        #             self.json['Body']['Content'] = val
-

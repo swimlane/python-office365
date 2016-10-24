@@ -22,6 +22,9 @@ def send_email(auth):
 
     print('inbox_parameters {count}'.format(count=(len(m))))
 
+    for message in m:
+        mail.delete_message(message=message)
+
 
 if __name__ == '__main__':
     authorization = (environ.get('OFFICE_USER'), environ.get('OFFICE_USER_PASSWORD'))
