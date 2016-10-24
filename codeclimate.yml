@@ -1,0 +1,26 @@
+exclude_paths:
+  - 'splunkapi3/data.py'
+ratings:
+  paths:
+    - '**.py'
+engines:
+  duplication:
+    enabled: true
+    checks:
+      Similar code:
+        enabled: false
+    config:
+      languages:
+      - python
+  fixme:
+    enabled: true
+  markdownlint:
+    enabled: true
+    checks:
+      MD013:
+        enabled: false
+  pep8:
+    enabled: true
+    checks:
+      E501:
+        enabled: false
