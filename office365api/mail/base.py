@@ -53,21 +53,18 @@ class Base(object):
         select = select or []
         select.extend(Message.parameters().keys())
         params = {'$select': (','.join(select)), '$top': top, '$skip': skip}
-        if search:
-            params['$search'] = search
-            # Office 365 doesn't accept following parameters if search is specified.
-            filters = None
-            order_by = None
-        if filters:
-            params['$filter'] = filters
-        if order_by:
-            params['$orderby'] = order_by
+
+        def add(key, value):
+            if value:
+                params[key] = value
+        add('$search', search)
+        add('$filter', filters)
+        add('$orderby', order_by)
 
         response = requests.get(url=url, auth=self.auth, params=params)
         data = response.json()
         return [Message.from_dict(value) for value in data.get('value')] if data else []
 
-    @property
     def get_attachments(self, folder: str, message: Message)->List[Attachment]:
         """
         Lazy loaded Attachments.
@@ -78,7 +75,7 @@ class Base(object):
         response = requests.get(url=self.ATTR_URL.format(id=message.Id, folder_id=folder),
                                 auth=self.auth)
         data = response.json()
-        message.Attachments = [Attachment(attachment) for attachment in data.get('value', [])] \
+        message.Attachments = [Attachment.factory(a) for a in data.get('value', [])] \
             if data else []
         return message.Attachments
 

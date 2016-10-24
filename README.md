@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/repos/580e1c8b429e9e61a3000001/badges/8526d07b056fbbdd672d/gpa.svg)](https://codeclimate.com/repos/580e1c8b429e9e61a3000001/feed)
+
 # Python-office365 - Office365 for you server
 
 The objective of office365api is to make it easy to make scripts and applications
