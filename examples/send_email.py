@@ -4,6 +4,7 @@ from os.path import join, dirname, normpath
 from os import environ
 from office365api.model import Recipient, ItemBody
 from office365api import Message
+from office365api.model.attachment import FileAttachment
 
 dot_env_path = normpath(join(dirname(__file__), '../', '.env'))
 load_dotenv(dot_env_path)
@@ -12,9 +13,12 @@ load_dotenv(dot_env_path)
 def send_email(auth):
     mail = Mail(auth=auth)
     recipient = Recipient.from_email(auth[0])
+    this_file = normpath(__file__)
+    attachment = FileAttachment.from_file(this_file)
     message = Message(Body=ItemBody(Content='Test body'),
                       Subject='Test from office365api', From=recipient,
                       ToRecipients=[recipient])
+    message.Attachments.append(attachment)
     mail.inbox.send_message(message)
 
     filters = "Subject eq '{subject}'".format(subject=message.Subject)

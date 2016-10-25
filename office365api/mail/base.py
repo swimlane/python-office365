@@ -8,7 +8,7 @@ class Base(object):
 
     BASE_URL = 'https://outlook.office365.com/api/v1.0/me/'
     MAILBOX_URL = BASE_URL+'folders/{folder_id}/messages'
-    ATTR_URL = BASE_URL+'folders/{folder_id}/messages/{id}/attachments'
+    ATTACHMENT_URL = BASE_URL + 'folders/{folder_id}/messages/{id}/attachments'
     MESSAGE_URL = BASE_URL + 'messages/{id}'
     SEND_URL = BASE_URL + 'sendmail'
     REPLY_URL = BASE_URL+'messages/{id}/reply'
@@ -77,7 +77,7 @@ class Base(object):
         """
         if not message.HasAttachments:
             return []
-        response = self.connection.get(url=self.ATTR_URL.format(id=message.Id, folder_id=folder))
+        response = self.connection.get(url=self.ATTACHMENT_URL.format(id=message.Id, folder_id=folder))
         data = response.json()
         message.Attachments = [Attachment.factory(a) for a in data.get('value', [])] \
             if data else []
@@ -96,6 +96,12 @@ class Base(object):
         """
         url = self.MESSAGE_URL.format(id=message.Id)
         self.connection.delete(url=url)
+
+    def create_attachment_in_folder(self, folder_id: str,
+                                    message: Message,
+                                    attachment: Attachment):
+        url = self.ATTACHMENT_URL.format(folder_id=folder_id, id=message.Id)
+        self.connection.post(url=url, data=attachment.writable_properties)
 
 
         #

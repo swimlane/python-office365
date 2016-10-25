@@ -1,5 +1,8 @@
 from typing import List
+
+from office365api.model.message import Message
 from office365api.mail.base import Base
+from office365api.model.attachment import Attachment
 
 
 class Folder(Base):
