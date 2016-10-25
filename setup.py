@@ -41,6 +41,6 @@ setup(name='Office365Api',
       url='https://github.com/swimlane/python-office365',
       packages=['office365api', 'office365api/model', 'office365api/mail'],
       install_requires=['requests'],
-      license='Apache 2.0',
+      license='MIT',
       classifiers=CLASSIFIERS
       )
