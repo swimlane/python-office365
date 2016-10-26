@@ -27,7 +27,7 @@ class Base(object):
                                  filters: str = None,
                                  search: str = None,
                                  order_by=None,
-                                 top: int=50,
+                                 top: int=100,
                                  skip: int=0) -> List[Message]:
         """
         Downloads messages to local memory.
@@ -56,6 +56,11 @@ class Base(object):
         add('$search', search)
         add('$filter', filters)
         add('$orderby', order_by)
+
+        # search override
+        if search:
+            for key in ['$skip', '$filter', '$orderby']:
+                params.pop(key, None)
 
         response = self.connection.get(url=url, params=params)
         data = response.json()
@@ -117,7 +122,15 @@ class Base(object):
         :param message: Message object.
         :return: None
         """
-        url = self.MESSAGE_URL.format(id=message.Id)
+        self.delete_message_id(message_id=message.Id)
+
+    def delete_message_id(self, message_id: str):
+        """
+        Deletes message from the server.
+        :param message_id: Message id
+        :return: None
+        """
+        url = self.MESSAGE_URL.format(id=message_id)
         self.connection.delete(url=url)
 
     def update_message(self, message: Message, fields: dict):
