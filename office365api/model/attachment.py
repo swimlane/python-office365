@@ -7,16 +7,18 @@ from office365api.model.model import Model
 
 class Attachment(Model):
 
-    def __init__(self, ContentType: str = None, IsInline: bool = False,
+    def __init__(self, Id: str=None, ContentType: str = None, IsInline: bool = False,
                  DateTimeLastModified: str = None, Name: str = None, Size: int = 0):
         """
         c-tor
+        :param Id: Attachment Id.
         :param ContentType:
         :param IsInline:
         :param DateTimeLastModified:
         :param Name:
         :param Size:
         """
+        self.Id = Id
         self.ContentType = ContentType
         self.IsInline = IsInline
         self.DateTimeLastModified = DateTimeLastModified
@@ -41,6 +43,7 @@ class ItemAttachment(Attachment):
 class FileAttachment(Attachment):
 
     def __init__(self,
+                 Id: str = None,
                  ContentBytes: bytearray = None,
                  ContentId: str = None,
                  ContentLocation: str = None,
@@ -60,7 +63,8 @@ class FileAttachment(Attachment):
         :param Name:
         :param Size:
         """
-        super().__init__(ContentType=ContentType,
+        super().__init__(Id=Id,
+                         ContentType=ContentType,
                          IsInline=IsInline,
                          DateTimeLastModified=DateTimeLastModified,
                          Name=Name,

@@ -28,3 +28,8 @@ class Connection(object):
         response = requests.delete(url, **kwargs, auth=self.auth)
         self.validate_response(response)
         return response
+
+    def patch(self, url, data, **kwargs):
+        response = requests.patch(url=url, data=data, **kwargs)
+        self.validate_response(response)
+        return response

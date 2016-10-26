@@ -1,6 +1,5 @@
 from office365api.mail.folder import Folder
 from office365api.model import Message
-from office365api.model.attachment import Attachment
 
 
 class Drafts(Folder):
@@ -20,11 +19,5 @@ class Drafts(Folder):
         url = (self.REPLY_ALL_URL if to_all else self.REPLY_URL).format(id=message.Id)
         self.connection.post(url=url, data={'Comment': comment or ''})
 
-    def create_attachment(self, message: Message, attachment: Attachment):
-        """
-
-        :param message:
-        :param attachment:
-        :return:
-        """
-        self.create_attachment_in_folder(self.folder_name, message=message, attachment=attachment)
+    def create_message(self, message: Message):
+        pass

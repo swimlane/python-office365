@@ -1,19 +1,21 @@
 from typing import List
 from office365api.connection import Connection
+from office365api.model import Recipient
 from office365api.model.attachment import Attachment
 from office365api.model.message import Message
 
 
 class Base(object):
 
-    BASE_URL = 'https://outlook.office365.com/api/v1.0/me/'
-    MAILBOX_URL = BASE_URL+'folders/{folder_id}/messages'
-    ATTACHMENT_URL = BASE_URL + 'folders/{folder_id}/messages/{id}/attachments'
-    MESSAGE_URL = BASE_URL + 'messages/{id}'
-    SEND_URL = BASE_URL + 'sendmail'
-    REPLY_URL = BASE_URL+'messages/{id}/reply'
-    REPLY_ALL_URL = BASE_URL+'messages/{id}/replyall'
-    # update_url = 'https://outlook.office365.com/api/v1.0/me/messages/{0}'
+    BASE_URL = 'https://outlook.office365.com/api/v1.0/me'
+    SEND_URL = BASE_URL + '/sendmail'
+    MAILBOX_URL = BASE_URL + '/folders/{folder_id}/messages'
+    MESSAGE_URL = BASE_URL + '/messages/{id}'
+
+    ATTACHMENT_URL = MESSAGE_URL + '/attachments'
+    REPLY_URL = MESSAGE_URL+'/reply'
+    REPLY_ALL_URL = MESSAGE_URL+'/replyall'
+    FORWARD_URL = MESSAGE_URL+'/forward'
 
     def __init__(self, auth):
         self.auth = auth
@@ -29,27 +31,18 @@ class Base(object):
                                  skip: int=0) -> List[Message]:
         """
         Downloads messages to local memory.
-
         :param skip:  Page results, skip - default 0.
-
         :param top: Page size, default take first 50 messages.
-
         :param folder: The folder from where to get messages. [Inbox, Drafts, SentItems,
         DeletedItems]
-
         :param select: The list of additional fields to retrieve.
         ['Bcc', 'IsDeliveryReceiptRequested']. By default returns only fields required for
         Message class.
-
         :param filters: Filters for messages OData 4.0 compatible.
         Example: "From/EmailAddress/Address ne 'MicrosoftOffice365@email.office.com'"
-
         :param search: Search criteria. When supplying string looks in subject, body etc
         if you want to look in a particular field 'from:microsoft'
-
         :param order_by: Order by field name. Example: 'DateTimeReceived desc'
-
-        :param page: Paging settings.
         """
         url = self.MAILBOX_URL.format(folder_id=folder)
 
@@ -84,9 +77,40 @@ class Base(object):
         return message.Attachments
 
     def send_message(self, message: Message):
+        """
+        Immediately sends the message.
+        :param message: Message.
+        :return: None
+        """
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data = message.data
         self.connection.post(self.SEND_URL, json=data, headers=headers)
+
+    def reply(self, message: Message, comment: str=None, to_all: bool=False):
+        """
+        Sends reply to sender and other recipients.
+        :param message: Message to reply to, only Id is important.
+        :param comment: Optional comment.
+        :param to_all: If true reply to other recipients as well.
+        :return: None
+        """
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        url = (self.REPLY_ALL_URL if to_all else self.REPLY_URL).format(id=message.Id)
+        data = {'Comment': (comment or '')}
+        self.connection.post(url=url, json=data, headers=headers)
+
+    def forward(self, message: Message, recipients: List[Recipient], comment: str=None):
+        """
+        Sends reply to sender and other recipients.
+        :param recipients: Recipients to forward it too.
+        :param message: Message to reply to, only Id is important.
+        :param comment: Optional comment.
+        :return: None
+        """
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        url = self.FORWARD_URL.format(id=message.Id)
+        data = {'Comment': (comment or ''), 'ToRecipients': [dict(r) for r in recipients]}
+        self.connection.post(url=url, json=data, headers=headers)
 
     def delete_message(self, message: Message):
         """
@@ -97,20 +121,42 @@ class Base(object):
         url = self.MESSAGE_URL.format(id=message.Id)
         self.connection.delete(url=url)
 
-    def create_attachment_in_folder(self, folder_id: str,
-                                    message: Message,
-                                    attachment: Attachment):
-        url = self.ATTACHMENT_URL.format(folder_id=folder_id, id=message.Id)
+    def update_message(self, message: Message, fields: dict):
+        """
+        Deletes message from the server.
+        :param fields: Fields needed updating.
+        :param message: Message object.
+        :return: None
+        """
+        url = self.MESSAGE_URL.format(id=message.Id)
+        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+        self.connection.patch(url=url, data=fields, headers=headers)
+
+    def create_attachment(self, message: Message, attachment: Attachment):
+        """
+        Adds an attachment to draft message before sending.
+        :param message: The draft message.
+        :param attachment: Attachment.
+        :return: None
+        """
+        url = self.ATTACHMENT_URL.format(id=message.Id)
         self.connection.post(url=url, data=attachment.writable_properties)
 
+    def delete_attachment(self, message: Message, attachment: Attachment):
+        """
+        Deletes attachment from message.
+        :param message: The message.
+        :param attachment: The attachment.
+        :return:
+        """
+        url = self.ATTACHMENT_URL.format(id=message.Id) + '/' + attachment.Id
+        self.connection.delete(url=url)
 
-        #
-        #     def markAsRead(self):
-        #         '''marks analogous message as read in the cloud.'''
-        #         read = '{"IsRead":true}'
-        #         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-        #         try:
-        #             response = requests.patch(self.update_url.format(self.json['Id']), read, headers=headers, auth=self.auth)
-        #         except:
-        #             return False
-        #         return True
+    def mark_read(self, message: Message):
+        """
+        Marks messages read.
+        :param message: Message to mark.
+        :return:
+        """
+        read = {"IsRead": True}
+        self.update_message(message=message, fields=read)
