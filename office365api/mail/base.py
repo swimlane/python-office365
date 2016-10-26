@@ -61,16 +61,15 @@ class Base(object):
         data = response.json()
         return [Message.from_dict(value) for value in data.get('value')] if data else []
 
-    def get_attachments(self, folder: str, message: Message)->List[Attachment]:
+    def get_attachments(self, message: Message)->List[Attachment]:
         """
         Lazy loaded Attachments.
         :param message: Message object.
-        :param folder: Folder where to perform attachment retrieval.
         :return: Attachment collection. It is also added to message as side effect.
         """
         if not message.HasAttachments:
             return []
-        response = self.connection.get(url=self.ATTACHMENT_URL.format(id=message.Id, folder_id=folder))
+        response = self.connection.get(url=self.ATTACHMENT_URL.format(id=message.Id))
         data = response.json()
         message.Attachments = [Attachment.factory(a) for a in data.get('value', [])] \
             if data else []
