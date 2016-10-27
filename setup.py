@@ -23,7 +23,7 @@ README = normpath(join(dirname(__file__), 'README.md'))
 CLASSIFIERS = [
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
-    'License :: OSI Approved :: MIT',
+    'License :: OSI Approved :: MIT License',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3.5',
