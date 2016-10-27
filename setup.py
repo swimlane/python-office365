@@ -23,12 +23,15 @@ README = normpath(join(dirname(__file__), 'README.md'))
 CLASSIFIERS = [
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
-    'License :: OSI Approved :: Apache Software License',
+    'License :: OSI Approved :: MIT',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: Implementation :: PyPy',
+    'Topic :: Software Development :: Libraries :: Python Modules :: Office 365',
     'Topic :: Office/Business :: Office Suites',
     'Topic :: Software Development :: Libraries'
 ]
-
-long_desc = ''
 
 setup(name='Office365Api',
       version=_version,
