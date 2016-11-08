@@ -6,19 +6,12 @@ from os.path import normpath, dirname, join
 sys.path.insert(0, normpath(dirname(__file__)))
 from office365api import __version__ as _version
 
-try:
-    from pypandoc import convert
 
-    def read_md(f):
-        return convert(f, 'rst')
-except ImportError:
-    convert = None
-    print("warning: pypandoc module not found, could not convert Markdown to RST")
+def read_rst(f):
+    with open('README.rst') as f:
+        return f.read()
 
-    def read_md(f):
-        return open(f, 'r').read()   # noqa
-
-README = normpath(join(dirname(__file__), 'README.md'))
+README = normpath(join(dirname(__file__), 'README.rst'))
 
 CLASSIFIERS = [
     'Development Status :: 4 - Beta',
@@ -36,7 +29,7 @@ CLASSIFIERS = [
 setup(name='Office365Api',
       version=_version,
       description='Python library for working with Microsoft Office 365',
-      long_description=read_md(README),
+      long_description=read_rst(README),
       author='Dmitriy Krasnikov',
       author_email='dmitriy.krasnikov@swimlane.com',
       maintainer='Dmitriy Krasnikov',
