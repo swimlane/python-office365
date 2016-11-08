@@ -1,3 +1,2 @@
 requests==2.11.1
-pypandoc
 python-dotenv==0.6.0
