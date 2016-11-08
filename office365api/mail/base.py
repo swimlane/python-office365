@@ -86,7 +86,7 @@ class Base(object):
         :return: None
         """
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data = dict(message)
+        data = message.data
         self.connection.post(self.SEND_URL, json=data, headers=headers)
 
     def reply(self, message, comment=None, to_all=False):
