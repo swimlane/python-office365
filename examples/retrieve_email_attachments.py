@@ -16,7 +16,7 @@ def inbox_parameters(auth):
                                 top=1)
     print('inbox_parameters {count}'.format(count=(len(m))))
     for message in m:
-        a = mail.inbox.get_attachments('Inbox', message=message)
+        a = mail.inbox.get_attachments(message=message)
         print(a)
     return m
 
