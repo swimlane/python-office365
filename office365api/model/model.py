@@ -63,7 +63,7 @@ class Model(object):
 
     @property
     def data(self):
-        return {self.__class__.__name__(self)}
+        return {self.__class__.__name__: dict(self)}
 
 
 class ItemBody(Model):
@@ -126,6 +126,15 @@ class Message(Model):
         self.HasAttachments = HasAttachments
         self.DateTimeReceived = DateTimeReceived
         self.Attachments = []
+
+    def __iter__(self):
+        """
+        Convert objects back to dictionary.
+        :return: Dictionary representation.
+        """
+        for k, v in self.__dict__.items():
+            if v is not None and k != 'HasAttachments':
+                yield k, Model.get_value(v)
 
 
 class Attachment(Model):
