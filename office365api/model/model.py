@@ -1,6 +1,5 @@
 import inspect
 from json import dumps
-from typing import Any
 
 
 class Model(object):
@@ -40,7 +39,7 @@ class Model(object):
         return parameters
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data):
         kwargs = {}
         for arg in cls.parameters().values():
             kwargs[arg.name] = Model.get_data(data.pop(arg.name), arg.annotation)
@@ -49,7 +48,7 @@ class Model(object):
         return model
 
     @staticmethod
-    def get_data(value, value_type)->Any:
+    def get_data(value, value_type):
         if isinstance(value_type, list):
             return [Model.get_data(v, value_type[0]) for v in value]
         if issubclass(value_type, Model):
@@ -58,4 +57,4 @@ class Model(object):
 
     @property
     def data(self):
-        return {self.__class__.__name__: dict(self)}
+        return {self.__class__.__name__(self)}

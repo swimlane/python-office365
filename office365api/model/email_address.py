@@ -6,7 +6,7 @@ class EmailAddress(Model):
     The name and email address of a contact or message recipient.
     """
 
-    def __init__(self, Name: str, Address: str):
+    def __init__(self, Name, Address):
         """
         c-tor
         :param Name:  The display name of the person or entity.

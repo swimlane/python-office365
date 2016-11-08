@@ -1,4 +1,3 @@
-from typing import List
 from office365api.connection import Connection
 from office365api.model import Recipient
 from office365api.model.attachment import Attachment
@@ -22,13 +21,13 @@ class Base(object):
         self.connection = Connection(auth)
 
     def get_messages_from_folder(self,
-                                 folder: str,
-                                 select: List = None,
-                                 filters: str = None,
-                                 search: str = None,
+                                 folder,
+                                 select= None,
+                                 filters= None,
+                                 search= None,
                                  order_by=None,
-                                 top: int=100,
-                                 skip: int=0) -> List[Message]:
+                                 top=100,
+                                 skip=0):
         """
         Downloads messages to local memory.
         :param skip:  Page results, skip - default 0.
@@ -66,7 +65,7 @@ class Base(object):
         data = response.json()
         return [Message.from_dict(value) for value in data.get('value')] if data else []
 
-    def get_attachments(self, message: Message)->List[Attachment]:
+    def get_attachments(self, message):
         """
         Lazy loaded Attachments.
         :param message: Message object.
@@ -80,7 +79,7 @@ class Base(object):
             if data else []
         return message.Attachments
 
-    def send_message(self, message: Message):
+    def send_message(self, message):
         """
         Immediately sends the message.
         :param message: Message.
@@ -90,7 +89,7 @@ class Base(object):
         data = message.data
         self.connection.post(self.SEND_URL, json=data, headers=headers)
 
-    def reply(self, message: Message, comment: str=None, to_all: bool=False):
+    def reply(self, message, comment=None, to_all=False):
         """
         Sends reply to sender and other recipients.
         :param message: Message to reply to, only Id is important.
@@ -103,7 +102,7 @@ class Base(object):
         data = {'Comment': (comment or '')}
         self.connection.post(url=url, json=data, headers=headers)
 
-    def forward(self, message: Message, recipients: List[Recipient], comment: str=None):
+    def forward(self, message, recipients, comment=None):
         """
         Sends reply to sender and other recipients.
         :param recipients: Recipients to forward it too.
@@ -116,7 +115,7 @@ class Base(object):
         data = {'Comment': (comment or ''), 'ToRecipients': [dict(r) for r in recipients]}
         self.connection.post(url=url, json=data, headers=headers)
 
-    def delete_message(self, message: Message):
+    def delete_message(self, message):
         """
         Deletes message from the server.
         :param message: Message object.
@@ -124,7 +123,7 @@ class Base(object):
         """
         self.delete_message_id(message_id=message.Id)
 
-    def delete_message_id(self, message_id: str):
+    def delete_message_id(self, message_id):
         """
         Deletes message from the server.
         :param message_id: Message id
@@ -133,7 +132,7 @@ class Base(object):
         url = self.MESSAGE_URL.format(id=message_id)
         self.connection.delete(url=url)
 
-    def update_message(self, message: Message, fields: dict):
+    def update_message(self, message, fields):
         """
         Deletes message from the server.
         :param fields: Fields needed updating.
@@ -144,7 +143,7 @@ class Base(object):
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         self.connection.patch(url=url, data=fields, headers=headers)
 
-    def create_attachment(self, message: Message, attachment: Attachment):
+    def create_attachment(self, message, attachment):
         """
         Adds an attachment to draft message before sending.
         :param message: The draft message.
@@ -154,7 +153,7 @@ class Base(object):
         url = self.ATTACHMENT_URL.format(id=message.Id)
         self.connection.post(url=url, data=attachment.writable_properties)
 
-    def delete_attachment(self, message: Message, attachment: Attachment):
+    def delete_attachment(self, message, attachment):
         """
         Deletes attachment from message.
         :param message: The message.
@@ -164,7 +163,7 @@ class Base(object):
         url = self.ATTACHMENT_URL.format(id=message.Id) + '/' + attachment.Id
         self.connection.delete(url=url)
 
-    def mark_read(self, message: Message):
+    def mark_read(self, message):
         """
         Marks messages read.
         :param message: Message to mark.

@@ -7,8 +7,8 @@ class Message(Model):
 
     select = ['From', 'Subject', 'Body', 'ToRecipients', 'DateTimeReceived', 'HasAttachments']
 
-    def __init__(self, From: Recipient, ToRecipients: [Recipient], Subject: str, Body: ItemBody,
-                 HasAttachments: bool=False, Id: str=None, DateTimeReceived=None):
+    def __init__(self, From, ToRecipients, Subject, Body,
+                 HasAttachments=False, Id=None, DateTimeReceived=None):
         self.Id = Id
         self.From = From
         self.ToRecipients = ToRecipients

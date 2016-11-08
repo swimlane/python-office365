@@ -7,8 +7,8 @@ from office365api.model.model import Model
 
 class Attachment(Model):
 
-    def __init__(self, Id: str=None, ContentType: str = None, IsInline: bool = False,
-                 DateTimeLastModified: str = None, Name: str = None, Size: int = 0):
+    def __init__(self, Id=None, ContentType= None, IsInline= False,
+                 DateTimeLastModified= None, Name= None, Size= 0):
         """
         c-tor
         :param Id: Attachment Id.
@@ -26,7 +26,7 @@ class Attachment(Model):
         self.Size = Size
 
     @classmethod
-    def factory(cls, data: dict):
+    def factory(cls, data):
         return ItemAttachment.from_dict(data=data) \
             if data.get('@odata.type') == '#Microsoft.OutlookServices.FileAttachment' \
             else FileAttachment.from_dict(data=data)
@@ -43,15 +43,15 @@ class ItemAttachment(Attachment):
 class FileAttachment(Attachment):
 
     def __init__(self,
-                 Id: str = None,
-                 ContentBytes: bytearray = None,
-                 ContentId: str = None,
-                 ContentLocation: str = None,
-                 ContentType: str = None,
-                 IsInline: bool = False,
-                 DateTimeLastModified: str = None,
-                 Name: str = None,
-                 Size: int = 0):
+                 Id= None,
+                 ContentBytes= None,
+                 ContentId= None,
+                 ContentLocation= None,
+                 ContentType= None,
+                 IsInline= False,
+                 DateTimeLastModified= None,
+                 Name= None,
+                 Size= 0):
         """
         c-tor
         :param ContentBytes:
@@ -63,7 +63,7 @@ class FileAttachment(Attachment):
         :param Name:
         :param Size:
         """
-        super().__init__(Id=Id,
+        super(FileAttachment, self).__init__(Id=Id,
                          ContentType=ContentType,
                          IsInline=IsInline,
                          DateTimeLastModified=DateTimeLastModified,
@@ -83,7 +83,7 @@ class FileAttachment(Attachment):
         }
 
     @classmethod
-    def from_file(cls, path: str):
+    def from_file(cls, path):
         with open(path, mode='rb') as stream:
             name = basename(path)
             bs = stream.read()

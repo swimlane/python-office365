@@ -8,7 +8,7 @@ class Recipient(Model):
     """
 
     # noinspection PyShadowingNames
-    def __init__(self, EmailAddress: EmailAddress =None):
+    def __init__(self, EmailAddress=None):
         """
         c-tor
         :param EmailAddress: The recipient's email address.
@@ -16,6 +16,6 @@ class Recipient(Model):
         self.EmailAddress = EmailAddress
 
     @classmethod
-    def from_email(cls, email: str):
+    def from_email(cls, email):
         name, _ = email.split('@')
         return cls(EmailAddress=EmailAddress(Name=name, Address=email))

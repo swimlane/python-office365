@@ -1,11 +1,10 @@
-from typing import Tuple
 from requests import ConnectionError
 import requests
 
 
 class Connection(object):
 
-    def __init__(self, auth: Tuple[str, str]):
+    def __init__(self, auth):
         self.auth = auth
 
     @staticmethod
@@ -15,17 +14,17 @@ class Connection(object):
             raise ConnectionError("{code}: {text}".format(code=code, text=response.text))
 
     def get(self, url, params=None, **kwargs):
-        response = requests.get(url, params, **kwargs, auth=self.auth)
+        response = requests.get(url, params, auth=self.auth, **kwargs)
         self.validate_response(response)
         return response
 
     def post(self, url, data=None, json=None, **kwargs):
-        response = requests.post(url, data, json, **kwargs, auth=self.auth)
+        response = requests.post(url, data, json, auth=self.auth, **kwargs)
         self.validate_response(response)
         return response
 
     def delete(self, url, **kwargs):
-        response = requests.delete(url, **kwargs, auth=self.auth)
+        response = requests.delete(url, auth=self.auth, **kwargs)
         self.validate_response(response)
         return response
 
