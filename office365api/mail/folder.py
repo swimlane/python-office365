@@ -1,6 +1,4 @@
-from office365api.model.message import Message
 from office365api.mail.base import Base
-from office365api.model.attachment import Attachment
 
 
 class Folder(Base):
@@ -8,12 +6,12 @@ class Folder(Base):
     def folder_name(self):
         raise NotImplementedError('This class cannot be used without inheritance.')
 
-    def get_messages(self, select= None,
-                     filters= None,
-                     search= None,
+    def get_messages(self, select=None,
+                     filters=None,
+                     search=None,
                      order_by=None,
-                     top= 50,
-                     skip= 0):
+                     top=50,
+                     skip=0):
         """
         Downloads messages to local memory.
 
@@ -32,8 +30,6 @@ class Folder(Base):
         if you want to look in a particular field 'from:microsoft'
 
         :param order_by: Order by field name. Example: 'DateTimeReceived desc'
-
-        :param page: Paging settings.
         """
         return self.get_messages_from_folder(folder=self.folder_name,
                                              select=select,

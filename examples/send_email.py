@@ -2,9 +2,8 @@ from office365api import Mail
 from dotenv import load_dotenv
 from os.path import join, dirname, normpath
 from os import environ
-from office365api.model import Recipient, ItemBody
+from office365api.model import Recipient, ItemBody, FileAttachment
 from office365api import Message
-from office365api.model.attachment import FileAttachment
 
 dot_env_path = normpath(join(dirname(__file__), '../', '.env'))
 load_dotenv(dot_env_path)

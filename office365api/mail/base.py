@@ -1,7 +1,6 @@
 from office365api.connection import Connection
-from office365api.model import Recipient
-from office365api.model.attachment import Attachment
-from office365api.model.message import Message
+from office365api.model import Attachment
+from office365api.model import Message
 
 
 class Base(object):
@@ -22,9 +21,9 @@ class Base(object):
 
     def get_messages_from_folder(self,
                                  folder,
-                                 select= None,
-                                 filters= None,
-                                 search= None,
+                                 select=None,
+                                 filters=None,
+                                 search=None,
                                  order_by=None,
                                  top=100,
                                  skip=0):
@@ -46,12 +45,13 @@ class Base(object):
         url = self.MAILBOX_URL.format(folder_id=folder)
 
         select = select or []
-        select.extend(Message.parameters().keys())
+        select.extend(Message.parameters())
         params = {'$select': (','.join(select)), '$top': top, '$skip': skip}
 
-        def add(key, value):
-            if value:
-                params[key] = value
+        def add(k, v):
+            if v:
+                params[k] = v
+
         add('$search', search)
         add('$filter', filters)
         add('$orderby', order_by)
@@ -86,7 +86,7 @@ class Base(object):
         :return: None
         """
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data = message.data
+        data = dict(message)
         self.connection.post(self.SEND_URL, json=data, headers=headers)
 
     def reply(self, message, comment=None, to_all=False):
