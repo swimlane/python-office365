@@ -5,7 +5,8 @@ import requests
 class Connection(object):
 
     def __init__(self, auth):
-        self.auth = auth
+        self.s = requests.Session()
+        self.s.auth = auth
 
     @staticmethod
     def validate_response(response):
@@ -14,21 +15,21 @@ class Connection(object):
             raise ConnectionError("{code}: {text}".format(code=code, text=response.text))
 
     def get(self, url, params=None, **kwargs):
-        response = requests.get(url, params, auth=self.auth, **kwargs)
+        response = self.s.get(url, params=params, **kwargs)
         self.validate_response(response)
         return response
 
     def post(self, url, data=None, json=None, **kwargs):
-        response = requests.post(url, data, json, auth=self.auth, **kwargs)
+        response = self.s.post(url, data=data, json=json, **kwargs)
         self.validate_response(response)
         return response
 
     def delete(self, url, **kwargs):
-        response = requests.delete(url, auth=self.auth, **kwargs)
+        response = self.s.delete(url, **kwargs)
         self.validate_response(response)
         return response
 
     def patch(self, url, data, **kwargs):
-        response = requests.patch(url=url, data=data, **kwargs)
+        response = self.s.patch(url, data=data, **kwargs)
         self.validate_response(response)
         return response
