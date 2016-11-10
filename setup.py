@@ -21,7 +21,7 @@ CLASSIFIERS = [
     'Programming Language :: Python',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: Implementation :: PyPy',
-    'Topic :: Software Development :: Libraries :: Python Modules :: Office 365',
+    'Topic :: Software Development :: Libraries :: Python Modules',
     'Topic :: Office/Business :: Office Suites',
     'Topic :: Software Development :: Libraries'
 ]

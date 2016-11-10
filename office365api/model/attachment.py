@@ -28,7 +28,7 @@ class Attachment(Model):
     @classmethod
     def factory(cls, data: dict):
         return ItemAttachment.from_dict(data=data) \
-            if data.get('@odata.type') == '#Microsoft.OutlookServices.FileAttachment' \
+            if data.get('@odata.type') != '#Microsoft.OutlookServices.FileAttachment' \
             else FileAttachment.from_dict(data=data)
 
     @property
