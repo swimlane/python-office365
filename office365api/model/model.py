@@ -55,10 +55,13 @@ class Model(object):
             return [Model.get_data(v) for v in value]
         # Got damn 2.7 and no annotations
         if hasattr(value, 'keys'):
-            key_name = value.keys()[0]
-            for klass in [Recipient, Message, EmailAddress, ItemBody, Attachment]:
-                if key_name == klass.__name__:
-                    return klass.from_dict(value[key_name])
+            keys = value.keys()
+            if 'EmailAddress' in keys:
+                return Recipient.from_dict(value)
+            elif 'Body' in keys:
+                return ItemBody.from_dict(value)
+            elif 'Address' in keys:
+                return EmailAddress.from_dict(value)
         return value
 
     @property
@@ -160,7 +163,7 @@ class Attachment(Model):
     @classmethod
     def factory(cls, data):
         return ItemAttachment.from_dict(data=data) \
-            if data.get('@odata.type') == '#Microsoft.OutlookServices.FileAttachment' \
+            if data.get('@odata.type') != '#Microsoft.OutlookServices.FileAttachment' \
             else FileAttachment.from_dict(data=data)
 
     @property
