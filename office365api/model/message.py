@@ -5,8 +5,6 @@ from office365api.model.model import Model
 
 class Message(Model):
 
-    select = ['From', 'Subject', 'Body', 'ToRecipients', 'DateTimeReceived', 'HasAttachments']
-
     def __init__(self, From: Recipient, ToRecipients: [Recipient], Subject: str, Body: ItemBody,
                  HasAttachments: bool=False, Id: str=None, DateTimeReceived=None):
         self.Id = Id
@@ -17,3 +15,12 @@ class Message(Model):
         self.HasAttachments = HasAttachments
         self.DateTimeReceived = DateTimeReceived
         self.Attachments = []
+
+    def __iter__(self):
+        """
+        Convert objects back to dictionary.
+        :return: Dictionary representation.
+        """
+        for k, v in self.__dict__.items():
+            if v is not None and k != 'HasAttachments':
+                yield k, Model.get_value(v)

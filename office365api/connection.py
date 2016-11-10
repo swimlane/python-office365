@@ -9,6 +9,9 @@ class Connection(object):
         self.s = requests.Session()
         self.s.auth = auth
 
+    def __del__(self):
+        self.s.close()
+
     @staticmethod
     def validate_response(response):
         code = response.status_code
