@@ -1,8 +1,11 @@
-from office365api.mail.folder import Folder
+from office365api.mail.mailbox import MailBox
 from office365api.model import Message
 
 
-class Drafts(Folder):
+class Drafts(MailBox):
+    """
+    Drafts box methods.
+    """
 
     @property
     def folder_name(self):

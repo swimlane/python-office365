@@ -1,6 +1,7 @@
 from office365api.mail.base import Base
 from office365api.mail.drafts import Drafts
 from office365api.mail.inbox import Inbox
+from office365api.mail.folders import Folders
 
 
 class Mail(Base):
@@ -19,3 +20,11 @@ class Mail(Base):
         if not self._drafts:
             self._drafts = Drafts(self.auth)
         return self._drafts
+
+    _folders = None
+
+    @property
+    def folders(self):
+        if not self._folders:
+            self._folders = Folders(self.auth)
+        return self._folders

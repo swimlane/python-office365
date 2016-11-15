@@ -1,13 +1,18 @@
 from typing import List
-
-from office365api.model.message import Message
 from office365api.mail.base import Base
-from office365api.model.attachment import Attachment
 
 
-class Folder(Base):
+class MailBox(Base):
+    """
+    Named folders base class
+    """
+
     @property
     def folder_name(self):
+        """
+        Folder name abstract property.
+        :return: Folder name
+        """
         raise NotImplementedError('This class cannot be used without inheritance.')
 
     def get_messages(self, select: List = None,
@@ -35,11 +40,14 @@ class Folder(Base):
 
         :param order_by: Order by field name. Example: 'DateTimeReceived desc'
 
-        :param page: Paging settings.
+        :param top: How many messages to retrieve. Default 50.
+
+        :param skip: How many messages to skip. Default 0.
         """
         return self.get_messages_from_folder(folder=self.folder_name,
                                              select=select,
                                              filters=filters,
                                              search=search,
                                              order_by=order_by,
-                                             top=top, skip=skip)
+                                             top=top,
+                                             skip=skip)
