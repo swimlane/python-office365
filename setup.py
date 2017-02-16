@@ -3,9 +3,6 @@ from setuptools import setup
 import sys
 from os.path import normpath, dirname, join
 
-sys.path.insert(0, normpath(dirname(__file__)))
-from office365api import __version__ as _version
-
 
 def read_rst(f):
     with open('README.rst') as f:
@@ -26,8 +23,8 @@ CLASSIFIERS = [
     'Topic :: Software Development :: Libraries'
 ]
 
-setup(name='Office365Api-27',
-      version=_version,
+setup(name='Office365Api',
+      version= "0.0.5",
       description='Python library for working with Microsoft Office 365',
       long_description=read_rst(README),
       author='Dmitriy Krasnikov',
