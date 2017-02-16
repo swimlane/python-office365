@@ -23,7 +23,7 @@ CLASSIFIERS = [
     'Topic :: Software Development :: Libraries'
 ]
 
-setup(name='Office365Api',
+setup(name='Office365Api-27',
       version= "0.0.5",
       description='Python library for working with Microsoft Office 365',
       long_description=read_rst(README),
