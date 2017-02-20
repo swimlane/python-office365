@@ -162,3 +162,15 @@ class Base(Api):
         """
         read = {"IsRead": True}
         self.update_message(message=message, fields=read)
+
+
+    def mark_read_id(self, id: str):
+        """
+        Marks messages read.
+        :param id: The id of the message to mark.
+        :return:
+        """
+        fields = {"IsRead": True}
+        url = self.MESSAGE_URL.format(id=id)
+        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+        self.connection.patch(url=url, data=fields, headers=headers)
