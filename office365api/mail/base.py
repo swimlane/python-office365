@@ -163,7 +163,6 @@ class Base(Api):
         read = {"IsRead": True}
         self.update_message(message=message, fields=read)
 
-
     def mark_read_id(self, id: str):
         """
         Marks messages read.
