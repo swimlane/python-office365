@@ -125,12 +125,21 @@ class Base(Api):
 
     def update_message(self, message: Message, fields: dict):
         """
-        Deletes message from the server.
+        Updates a message on the server.
         :param fields: Fields needed updating.
         :param message: Message object.
         :return: None
         """
-        url = self.MESSAGE_URL.format(id=message.Id)
+        self.update_message(message.Id, fields)
+
+    def update_message(self, id: string, fields: dict):
+        """
+        Updates a message on the server.
+        :param id: id of the message to update
+        :param fields: Fields needed updating.
+        :return: None
+        """
+        url = self.MESSAGE_URL.format(id=id)
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         self.connection.patch(url=url, data=fields, headers=headers)
 
@@ -160,9 +169,8 @@ class Base(Api):
         :param message: Message to mark.
         :return:
         """
-        read = {"IsRead": True}
+        read = "{'IsRead': true}"
         self.update_message(message=message, fields=read)
-
 
     def mark_read_id(self, id: str):
         """
@@ -170,7 +178,5 @@ class Base(Api):
         :param id: The id of the message to mark.
         :return:
         """
-        fields = {"IsRead": True}
-        url = self.MESSAGE_URL.format(id=id)
-        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-        self.connection.patch(url=url, data=fields, headers=headers)
+        read = "{'IsRead': true}"
+        self.update_message(id, read)
