@@ -132,7 +132,7 @@ class Base(Api):
         """
         self.update_message(message.Id, fields)
 
-    def update_message(self, id: string, fields: dict):
+    def update_message(self, id: str, fields: dict):
         """
         Updates a message on the server.
         :param id: id of the message to update
