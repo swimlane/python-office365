@@ -44,7 +44,7 @@ class Model(object):
     def from_dict(cls, data):
         kwargs = {}
         for arg in cls.parameters():
-            kwargs[arg] = Model.get_data(data.pop(arg))
+            kwargs[arg] = Model.get_data(data.pop(arg)) if arg in data else None
         model = cls(**kwargs)
         model.__dict__.update(data)
         return model
