@@ -24,7 +24,7 @@ CLASSIFIERS = [
 ]
 
 setup(name='Office365Api-27',
-      version= "0.0.6",
+      version= "0.0.7",
       description='Python library for working with Microsoft Office 365',
       long_description=read_rst(README),
       author='Dmitriy Krasnikov',
