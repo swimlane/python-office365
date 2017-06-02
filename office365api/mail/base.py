@@ -10,7 +10,7 @@ class Base(object):
     MAILBOX_URL = BASE_URL + '/folders/{folder_id}/messages'
     MESSAGE_URL = BASE_URL + '/messages/{id}'
 
-    ATTACHMENT_URL = MESSAGE_URL + '/attachments'
+    ATTACHMENT_URL = MESSAGE_URL + '/attachments?$expand=Microsoft.OutlookServices.ItemAttachment/Item'
     REPLY_URL = MESSAGE_URL+'/reply'
     REPLY_ALL_URL = MESSAGE_URL+'/replyall'
     FORWARD_URL = MESSAGE_URL+'/forward'
