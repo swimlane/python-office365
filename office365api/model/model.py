@@ -43,7 +43,8 @@ class Model(object):
     def from_dict(cls, data: dict):
         kwargs = {}
         for arg in cls.parameters().values():
-            kwargs[arg.name] = Model.get_data(data.pop(arg.name), arg.annotation)
+            if arg.name in data:
+                kwargs[arg.name] = Model.get_data(data.pop(arg.name), arg.annotation)
         model = cls(**kwargs)
         model.__dict__.update(data)
         return model

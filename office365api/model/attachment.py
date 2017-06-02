@@ -2,6 +2,8 @@ from os.path import basename
 import base64
 import json
 import requests
+
+from office365api.model.message import Message
 from office365api.model.model import Model
 
 
@@ -37,7 +39,34 @@ class Attachment(Model):
 
 
 class ItemAttachment(Attachment):
-    pass
+
+    def __init__(self,
+                 Id=None,
+                 Item=None,
+                 ContentType=None,
+                 IsInline=False,
+                 DateTimeLastModified=None,
+                 Name=None,
+                 Size=0):
+        """
+        c-tor
+        :param ContentBytes:
+        :param ContentId:
+        :param ContentLocation:
+        :param ContentType:
+        :param IsInline:
+        :param DateTimeLastModified:
+        :param Name:
+        :param Size:
+        """
+        super(ItemAttachment, self).__init__(Id=Id,
+                                             ContentType=ContentType,
+                                             IsInline=IsInline,
+                                             DateTimeLastModified=DateTimeLastModified,
+                                             Name=Name,
+                                             Size=Size)
+        self.Item = Message.from_dict(Item)
+        self.__dict__['@odata.type'] = '#Microsoft.OutlookServices.ItemAttachment'
 
 
 class FileAttachment(Attachment):

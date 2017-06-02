@@ -1,3 +1,4 @@
+from office365api.model.attachment import ItemAttachment
 from office365api import Mail
 from dotenv import load_dotenv
 from os.path import join, dirname, normpath
@@ -10,7 +11,7 @@ load_dotenv(dot_env_path)
 def inbox_parameters(auth):
     mail = Mail(auth=auth)
     filters = "HasAttachments eq true" + \
-              " and DateTimeReceived gt 2016-01-01T00:00:01Z"
+              " AND IsRead eq false"
     m = mail.inbox.get_messages(select=['DateTimeSent'],
                                 filters=filters,
                                 top=1)
