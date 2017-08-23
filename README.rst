@@ -1,4 +1,4 @@
-Python-office365 - Office365 for you server
+Python-office365 - Office365 for your server
 ===========================================
 
 The objective of office365api is to make it easy to make scripts and
