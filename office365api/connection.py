@@ -1,11 +1,10 @@
-from typing import Tuple
 from requests import ConnectionError
 import requests
 
 
 class Connection(object):
 
-    def __init__(self, auth: Tuple[str, str]):
+    def __init__(self, auth):
         self.s = requests.Session()
         self.s.auth = auth
 

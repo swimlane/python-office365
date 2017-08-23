@@ -1,17 +1,13 @@
-from office365api.mail.mailbox import MailBox
-from office365api.model import Message
+from office365api.mail.folders import Folder
 
 
-class Drafts(MailBox):
-    """
-    Drafts box methods.
-    """
+class Drafts(Folder):
 
     @property
     def folder_name(self):
         return 'Drafts'
 
-    def reply(self, message: Message, comment: str=None, to_all: bool=False):
+    def reply(self, message, comment=None, to_all=False):
         """
         Sends reply to sender and other recipients.
         :param message: Message to reply to, only Id is important.
@@ -22,5 +18,5 @@ class Drafts(MailBox):
         url = (self.REPLY_ALL_URL if to_all else self.REPLY_URL).format(id=message.Id)
         self.connection.post(url=url, data={'Comment': comment or ''})
 
-    def create_message(self, message: Message):
+    def create_message(self, message):
         pass

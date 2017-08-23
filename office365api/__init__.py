@@ -1,6 +1,2 @@
-from office365api.mail import Mail
-from office365api.model import Message
-
-# version as tuple for simple comparisons
-VERSION = (0, 0, 5)
-__version__ = ".".join([str(x) for x in VERSION])
+from office365api.mail.mail import Mail
+__version__ = "0.0.8"

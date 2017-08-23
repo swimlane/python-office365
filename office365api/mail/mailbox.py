@@ -1,4 +1,3 @@
-from typing import List
 from office365api.mail.base import Base
 
 
@@ -15,12 +14,12 @@ class MailBox(Base):
         """
         raise NotImplementedError('This class cannot be used without inheritance.')
 
-    def get_messages(self, select: List = None,
-                     filters: str = None,
-                     search: str = None,
+    def get_messages(self, select=None,
+                     filters=None,
+                     search=None,
                      order_by=None,
-                     top: int = 50,
-                     skip: int = 0):
+                     top=50,
+                     skip=0):
         """
         Downloads messages to local memory.
 

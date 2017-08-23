@@ -8,9 +8,8 @@ from office365api.model.model import Model
 
 
 class Attachment(Model):
-
-    def __init__(self, Id: str=None, ContentType: str = None, IsInline: bool = False,
-                 DateTimeLastModified: str = None, Name: str = None, Size: int = 0):
+    def __init__(self, Id=None, ContentType=None, IsInline=False,
+                 DateTimeLastModified=None, Name=None, Size=0):
         """
         c-tor
         :param Id: Attachment Id.
@@ -28,7 +27,7 @@ class Attachment(Model):
         self.Size = Size
 
     @classmethod
-    def factory(cls, data: dict):
+    def factory(cls, data):
         return ItemAttachment.from_dict(data=data) \
             if data.get('@odata.type') != '#Microsoft.OutlookServices.FileAttachment' \
             else FileAttachment.from_dict(data=data)
@@ -39,7 +38,6 @@ class Attachment(Model):
 
 
 class ItemAttachment(Attachment):
-
     def __init__(self,
                  Id=None,
                  Item=None,
@@ -65,22 +63,21 @@ class ItemAttachment(Attachment):
                                              DateTimeLastModified=DateTimeLastModified,
                                              Name=Name,
                                              Size=Size)
-        self.Item = Message.from_dict(Item)
+        self.Item = Item
         self.__dict__['@odata.type'] = '#Microsoft.OutlookServices.ItemAttachment'
 
 
 class FileAttachment(Attachment):
-
     def __init__(self,
-                 Id: str = None,
-                 ContentBytes: bytearray = None,
-                 ContentId: str = None,
-                 ContentLocation: str = None,
-                 ContentType: str = None,
-                 IsInline: bool = False,
-                 DateTimeLastModified: str = None,
-                 Name: str = None,
-                 Size: int = 0):
+                 Id=None,
+                 ContentBytes=None,
+                 ContentId=None,
+                 ContentLocation=None,
+                 ContentType=None,
+                 IsInline=False,
+                 DateTimeLastModified=None,
+                 Name=None,
+                 Size=0):
         """
         c-tor
         :param ContentBytes:
@@ -92,12 +89,12 @@ class FileAttachment(Attachment):
         :param Name:
         :param Size:
         """
-        super().__init__(Id=Id,
-                         ContentType=ContentType,
-                         IsInline=IsInline,
-                         DateTimeLastModified=DateTimeLastModified,
-                         Name=Name,
-                         Size=Size)
+        super(FileAttachment, self).__init__(Id=Id,
+                                             ContentType=ContentType,
+                                             IsInline=IsInline,
+                                             DateTimeLastModified=DateTimeLastModified,
+                                             Name=Name,
+                                             Size=Size)
         self.ContentBytes = ContentBytes
         self.ContentId = ContentId
         self.ContentLocation = ContentLocation
@@ -112,9 +109,9 @@ class FileAttachment(Attachment):
         }
 
     @classmethod
-    def from_file(cls, path: str):
+    def from_file(cls, path):
         with open(path, mode='rb') as stream:
             name = basename(path)
             bs = stream.read()
-            content_bytes = str(base64.b64encode(bs), 'utf-8')
+            content_bytes = str(base64.b64encode(bs))
             return cls(Name=name, ContentBytes=content_bytes)

@@ -1,5 +1,3 @@
-from typing import List
-
 from office365api.mail.api import Api
 from office365api.model.folder import Folder
 
@@ -22,7 +20,7 @@ class Folders(Api):
         response = self.connection.get(url=url)
         return response.json()
 
-    def get_all_folders(self)->List[Folder]:
+    def get_all_folders(self):
         """
         Get all folders in mail account.
         :return: List of folders
@@ -32,7 +30,7 @@ class Folders(Api):
         data = response.json()
         return [Folder.from_dict(value) for value in data.get('value')] if data else []
 
-    def get_sub_folders(self, folder_id: str)->List[Folder]:
+    def get_sub_folders(self, folder_id):
         """
         Get sub folders in the folder.
         :return: List of folders
@@ -42,7 +40,7 @@ class Folders(Api):
         data = response.json()
         return [Folder.from_dict(value) for value in data.get('value')] if data else []
 
-    def get_folder(self, folder_id: str)->Folder:
+    def get_folder(self, folder_id):
         """
         Get folder.
         :return: folder

@@ -1,6 +1,4 @@
-import inspect
-from json import dumps
-from typing import Any
+import funcsigs
 
 
 class Model(object):
@@ -35,22 +33,21 @@ class Model(object):
 
     @classmethod
     def parameters(cls):
-        parameters = inspect.signature(cls.__init__).parameters.copy()
+        parameters = funcsigs.signature(cls.__init__).parameters.copy()
         parameters.pop('self')
         return parameters
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data):
         kwargs = {}
-        for arg in cls.parameters().values():
-            if arg.name in data:
-                kwargs[arg.name] = Model.get_data(data.pop(arg.name), arg.annotation)
+        for arg in cls.parameters():
+            kwargs[arg] = Model.get_data(data.pop(arg)) if arg in data else None
         model = cls(**kwargs)
         model.__dict__.update(data)
         return model
 
     @staticmethod
-    def get_data(value, value_type)->Any:
+    def get_data(value, value_type):
         if isinstance(value_type, list):
             return [Model.get_data(v, value_type[0]) for v in value]
         if issubclass(value_type, Model):

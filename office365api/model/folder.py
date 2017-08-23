@@ -8,13 +8,12 @@ class Folder(Model):
     """
 
     def __init__(self,
-                 Id: str,
-                 ParentFolderId: str,
-                 DisplayName: str,
-                 ChildFolderCount: int,
-                 TotalItemCount: int=0,
-                 UnreadItemCount: int=0,
-                 ):
+                 Id,
+                 ParentFolderId,
+                 DisplayName,
+                 ChildFolderCount,
+                 TotalItemCount=0,
+                 UnreadItemCount=0):
         """
         c-tor
         :param Id: The folder's unique identifier.
