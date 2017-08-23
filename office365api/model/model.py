@@ -47,11 +47,11 @@ class Model(object):
         return model
 
     @staticmethod
-    def get_data(value, value_type):
-        if isinstance(value_type, list):
-            return [Model.get_data(v, value_type[0]) for v in value]
-        if issubclass(value_type, Model):
-            return value_type.from_dict(value)
+    def get_data(value):
+        if isinstance(value, list):
+            return [Model.get_data(v) for v in value]
+        if isinstance(value, Model):
+            return value.from_dict(value)
         return value
 
     @property
