@@ -38,7 +38,8 @@ class Base(Api):
             if v:
                 params[k] = v
 
-        add('$search', search)
+        # Search must be surrounded by quotes
+        add('$search', '"{}"'.format(search))
         add('$filter', filters)
         add('$orderby', order_by)
 
@@ -120,7 +121,7 @@ class Base(Api):
 
     def update_message(self, message, fields):
         """
-        Deletes message from the server.
+        Updates a message on the server.
         :param fields: Fields needed updating.
         :param message: Message object.
         :return: None

@@ -1,9 +1,6 @@
 from os.path import basename
 import base64
-import json
-import requests
 
-from office365api.model.message import Message
 from office365api.model.model import Model
 
 
@@ -112,6 +109,5 @@ class FileAttachment(Attachment):
     def from_file(cls, path):
         with open(path, mode='rb') as stream:
             name = basename(path)
-            bs = stream.read()
-            content_bytes = str(base64.b64encode(bs))
+            content_bytes = base64.b64encode(stream.read()).decode()
             return cls(Name=name, ContentBytes=content_bytes)
