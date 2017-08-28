@@ -39,7 +39,7 @@ class Base(Api):
                 params[k] = v
 
         # Search must be surrounded by quotes
-        add('$search', '"{}"'.format(search))
+        add('$search', '"{}"'.format(search) if search else None)
         add('$filter', filters)
         add('$orderby', order_by)
 
